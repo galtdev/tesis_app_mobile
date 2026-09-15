@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TextInputProps, View, Text } from 'react-native';
+import { StyleSheet, TextInput, TextInputProps, View, Text, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,9 +18,11 @@ export const PremiumInput: React.FC<PremiumInputProps> = ({
   error,
   onFocus,
   onBlur,
+  secureTextEntry,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const focusAnim = useSharedValue(0);
 
   const handleFocus = (e: any) => {
@@ -70,8 +73,17 @@ export const PremiumInput: React.FC<PremiumInputProps> = ({
           placeholderTextColor="#94a3b8"
           onFocus={handleFocus}
           onBlur={handleBlur}
+          secureTextEntry={secureTextEntry && !isPasswordVisible}
           {...props}
         />
+        {secureTextEntry && (
+          <TouchableOpacity 
+            style={styles.eyeIcon} 
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          >
+            <Ionicons name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'} size={24} color="#64748b" />
+          </TouchableOpacity>
+        )}
       </Animated.View>
       {error && <Text style={styles.errorText}>{error}</Text>}
     </View>
@@ -94,16 +106,22 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     height: 56,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputError: {
     borderColor: '#ef4444',
     borderWidth: 1,
   },
   input: {
+    flex: 1,
     fontSize: 16,
     color: '#0f172a',
     height: '100%',
+  },
+  eyeIcon: {
+    padding: 4,
+    marginLeft: 8,
   },
   errorText: {
     color: '#ef4444',

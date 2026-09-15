@@ -1,6 +1,4 @@
-
-// Usando la IP local de tu computadora para que funcione tanto en emuladores como en dispositivos físicos
-export const API_URL = 'http://192.168.0.110:3001';
+export const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.0.115:3001';
 
 async function fetchApi(endpoint: string, options: RequestInit = {}) {
   const url = `${API_URL}${endpoint}`;
@@ -45,6 +43,13 @@ export const apiService = {
   async getUsers() {
     return fetchApi('/users', {
       method: 'GET',
+    });
+  },
+
+  async registerTenant(tenantData: any) {
+    return fetchApi('/restaurante/register', {
+      method: 'POST',
+      body: JSON.stringify(tenantData),
     });
   }
 };
